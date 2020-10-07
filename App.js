@@ -2,19 +2,19 @@ import React, {useState} from 'react';
 import { StyleSheet, Text, View, TextInput, Button, FlatList } from 'react-native';
 
 export default function App() {
-  const [todos, setTodos] = useState(['waw', 'poi'])
+  const [todos, setTodos] = useState([])
   const [text, setTxt] = useState("")
 
   function addTodo(){
     if(text.trim()  === ""){
       return
     } 
-    setTodos(todos.concat(text))
+    setTodos(todos.concat({value: text, id: Math.random().toString()}))
     setTxt("")
   }
 
   function renderItem(item){
-    return <View style={styles.todoV} key={item.index}><Text>{item.item}</Text></View>
+    return <View style={styles.todoV} key={item.index.id}><Text>{item.item.value}</Text></View>
   }
 
   return (
@@ -32,7 +32,8 @@ export default function App() {
         })} */}
         <FlatList 
         data= {todos}
-        renderItem={renderItem} />
+        renderItem={renderItem} 
+        keyExtractor={item => item.id}/>
       </View>
     </View>
   );
