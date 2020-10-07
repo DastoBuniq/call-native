@@ -1,38 +1,33 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, TextInput, Button, FlatList } from 'react-native';
+import Todo from './components/Todo'
+import Todoinput from './components/TodoInput'
 
 export default function App() {
   const [todos, setTodos] = useState([])
-  const [text, setTxt] = useState("")
 
-  function addTodo(){
+  function addTodo(text){
     if(text.trim()  === ""){
       return
     } 
     setTodos(todos.concat({value: text, id: Math.random().toString()}))
-    setTxt("")
   }
 
-  function renderItem(item){
-    return <View style={styles.todoV} key={item.index.id}><Text>{item.item.value}</Text></View>
+  function deleteTodo(id){
+    setTodos(todos.filter(item => item.id !== id))
   }
+
 
   return (
     <View style={styles.View}>
-      <View style={styles.headContainer}>
-        <TextInput placeholder="scrivi una cosa da fare o non fare" 
-        style={styles.Input} 
-        value={text}
-        onChangeText={t => setTxt(t)}/>
-        <Button onPress={addTodo} title="Ok" />
-      </View>
+      <Todoinput addTodo={addTodo}/>
       <View>
         {/* {todos.map((item, index) =>{
           return <View style={styles.todoV}><Text key={index}>{item}</Text></View>
         })} */}
         <FlatList 
         data= {todos}
-        renderItem={renderItem} 
+        renderItem={item => <Todo title = {item.item.value} delete={()=>deleteTodo(item.item.id)}/>} 
         keyExtractor={item => item.id}/>
       </View>
     </View>
@@ -40,28 +35,10 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  Input: {
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingVertical: 5,
-    paddingLeft: 3,
-    width: '80%'
-  },
   View: {
     borderColor: "blue",
     borderWidth: 1,
     paddingTop: 30 
   },
-  headContainer:{
-    backgroundColor: "grey",
-    borderWidth: 5,
-    padding: 15,
-    flexDirection: "row"
-  },
-  todoV:{
-    backgroundColor: "green",
-    paddingVertical: 10,
-    paddingLeft: 4,
-    marginBottom: 5,
-  }
+
 });
